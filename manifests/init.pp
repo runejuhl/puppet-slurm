@@ -573,6 +573,7 @@ class slurm(
   String                 $slurmctlddebugsyslog           = $slurm::params::slurmctlddebugsyslog,
   String                 $slurmddebugsyslog              = $slurm::params::slurmddebugsyslog,
   String                 $slurmdbddebugsyslog            = $slurm::params::slurmdbddebugsyslog,
+  Slurm::LogTimeFormat   $logtimeformat                  = $slurm::params::logtimeformat,
   # Ports
   Stdlib::Port           $slurmctldport                  = $slurm::params::slurmctldport,
   Stdlib::Port           $slurmdport                     = $slurm::params::slurmdport,
