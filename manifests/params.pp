@@ -26,19 +26,24 @@ class slurm::params {
   #### MODULE INTERNAL VARIABLES  #########
   # (Modify to adapt to unsupported OSes)
   #########################################
-  $pre_requisite_packages = $::osfamily ? {
-    'Redhat' => [
-      'hwloc', 'hwloc-devel', 'hwloc-plugins', 'numactl', 'numactl-devel',
-      'lua', 'lua-devel',
-      'mysql-devel',
-      'openssl', 'openssl-devel',
-      'pam-devel',
-      'perl-devel', 'perl-CPAN',
-      'readline', 'readline-devel',
-      'libX11-devel',
-      'libssh2-devel',
-    ],
-    default => []
+  unless $slurm::do_build {
+    $pre_requisite_packages = []
+  }
+  else {
+    $pre_requisite_packages = $::osfamily ? {
+      'Redhat' => [
+        'hwloc', 'hwloc-devel', 'hwloc-plugins', 'numactl', 'numactl-devel',
+        'lua', 'lua-devel',
+        'mysql-devel',
+        'openssl', 'openssl-devel',
+        'pam-devel',
+        'perl-devel', 'perl-CPAN',
+        'readline', 'readline-devel',
+        'libX11-devel',
+        'libssh2-devel',
+      ],
+      default => []
+    }
   }
   # Probably out of scope here, but useful
   $extra_packages = $::osfamily ? {
@@ -506,10 +511,15 @@ $munge_daemon_args = []
 $munge_package = $::operatingsystem ? {
   default => 'munge'
 }
-$munge_extra_packages = $::operatingsystem ? {
-  /(?i-mx:ubuntu|debian)/        => [ 'libmunge-dev' ],
-  /(?i-mx:centos|fedora|redhat)/ => [ 'munge-devel', 'munge-libs' ],
-  default => [ ]
+
+unless $slurm::do_build {
+  $munge_extra_packages = []
+} else {
+  $munge_extra_packages = $::operatingsystem ? {
+    /(?i-mx:ubuntu|debian)/        => [ 'libmunge-dev' ],
+    /(?i-mx:centos|fedora|redhat)/ => [ 'munge-devel', 'munge-libs' ],
+    default => [ ]
+  }
 }
 $munge_configdir = $::operatingsystem ? {
   default => '/etc/munge',
@@ -586,6 +596,7 @@ $storagetype         = 'mysql'
 $storageuser         = $username
 $storagepass         = 'janIR4TvYoSEqNF94QM' # use 'openssl rand 14 -base64' for instance
 $trackslurmctlddown  = false
+$bootstrap_mysql     = true
 
 
 
